@@ -88,3 +88,6 @@ fabric.properties
 *.app
 
 
+# venv
+venv/
+.venv/
