@@ -1,0 +1,71 @@
+#ifndef CPPGO_STATE_HPP
+#define CPPGO_STATE_HPP
+
+#include <cstddef>
+#include <list>
+#include <memory>
+#include <unordered_set>
+#include <vector>
+
+#include "color.hpp"
+#include "move.hpp"
+
+
+namespace cppgo {
+
+    class StateImpl;
+    class State;
+
+    class IllegalMoveException : public std::invalid_argument {
+    public:
+        explicit IllegalMoveException(std::string const &s);
+    };
+
+    struct History {
+        const int history_length;
+
+        std::list<std::vector<int>> black_history;
+        std::list<std::vector<int>> white_history;
+
+        explicit History(int history_length);
+
+        void add(State const& state);
+
+        std::list<std::vector<int>> const& history(Color c) const;
+    };
+
+    class State {
+    public:
+        explicit State(int board_size, double komi, bool superko_rule, int history_length);
+
+        void make_move(Move const &move, Color player = Color::EMPTY);
+
+        std::unordered_set<Move> legalmoves(Color c, bool include_eyeish = false) const;
+
+        std::vector<Color> const& stones() const;
+
+        std::vector<int> const& black_board() const;
+        std::vector<int> const& white_board() const;
+
+        History const& history() const;
+
+        int board_size() const;
+
+        double tromp_taylor_score(Color c) const;
+
+        std::string to_string() const;
+
+    public:
+        double komi;
+        Color current_player;
+
+    private:
+        History history_;
+        Move last_played_;
+
+        std::shared_ptr<StateImpl> state_;
+    };
+
+}
+
+#endif //CPPGO_STATE_HPP
