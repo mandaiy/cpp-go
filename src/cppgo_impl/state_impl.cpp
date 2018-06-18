@@ -27,7 +27,9 @@ namespace cppgo {
 
         if (played_in_opponent_eye_like) {
             for_each_4nbr(v, [&] (Move const& nbr) {
-                if (chain_group_.is_atari_group(nbr)) {
+                auto const& chain = chain_group().chain_at(nbr);
+
+                if (chain.is_in_atari() and chain.size() == 1) {
                     ko_vertex_ = nbr;
                 }
             });

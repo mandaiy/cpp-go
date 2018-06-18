@@ -149,10 +149,6 @@ namespace cppgo {
 
         os << std::endl;
 
-        os << std::endl;
-
-        os << state_->chain_group().to_string() << std::endl;
-
         return os.str();
     }
 
