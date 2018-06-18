@@ -142,5 +142,7 @@ PYBIND11_MODULE(cppgo, m) {
     m_features.def("board_i", &cppgo::board_i);
     m_features.def("board_n", &cppgo::board_n);
     m_features.def("color_n", &cppgo::color_n);
+    m_features.def("black",   &cppgo::black);
+    m_features.def("white",   &cppgo::white);
 }
 

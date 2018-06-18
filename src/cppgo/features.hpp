@@ -21,6 +21,10 @@ namespace cppgo {
     pybind11::array_t<float> board_n(State const& state, std::size_t n);
 
     pybind11::array_t<float> color_n(State const& state, std::size_t n, Color c);
+
+    pybind11::array_t<float> black(State const& state);
+
+    pybind11::array_t<float> white(State const& state);
 }
 
 #endif //CPPGO_FEATURES_HPP

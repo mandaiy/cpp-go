@@ -18,6 +18,30 @@ namespace cppgo {
         }
     }
 
+    py::array_t<float> color_impl(State const& state, Color c) {
+        auto board_size = static_cast<std::size_t>(state.board_size());
+        auto array_size = board_size * board_size;
+
+        auto ret = new float[array_size]();
+
+        if (state.current_player == c) {
+            std::fill_n(ret, array_size, 1.0f);
+        }
+
+        return py::array_t<float>({1, state.board_size(), state.board_size()}, ret, py::capsule(ret, [] (void* f) {
+            auto p = reinterpret_cast<float*>(f);
+            delete[] p;
+        }));
+    }
+
+    py::array_t<float> black(State const& state) {
+        return color_impl(state, Color::BLACK);
+    }
+
+    py::array_t<float> white(State const& state) {
+        return color_impl(state, Color::WHITE);
+    }
+
     py::array_t<float> board(State const& state) {
         return board_i(state, 0);
     }
@@ -60,7 +84,7 @@ namespace cppgo {
     }
 
     py::array_t<float> board_n(State const& state, std::size_t n) {
-        check(state, n);
+        check(state, n - 1);
 
         auto board_size = static_cast<std::size_t>(state.board_size());
         auto plane_size = board_size * board_size;
