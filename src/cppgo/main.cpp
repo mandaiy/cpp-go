@@ -139,6 +139,8 @@ PYBIND11_MODULE(cppgo, m) {
     py::module m_features = m.def_submodule("features");
 
     m_features.def("board",   &cppgo::board);
+    m_features.def("board_i", &cppgo::board_i);
     m_features.def("board_n", &cppgo::board_n);
+    m_features.def("color_n", &cppgo::color_n);
 }
 
