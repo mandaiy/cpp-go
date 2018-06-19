@@ -1,3 +1,4 @@
+#include <memory>
 #include <sstream>
 
 #include "state.hpp"
@@ -37,6 +38,15 @@ namespace cppgo {
             history_(history_length),
             state_(new cppgo::StateImpl(board_size, superko_rule))
     { }
+
+    State::State(State const& other) :
+            komi(other.komi),
+            current_player(other.current_player),
+            history_(other.history_),
+            last_played_(other.last_played_)
+    {
+        state_ = std::make_shared<StateImpl>(*other.state_);
+    }
 
     void State::make_move(Move const& move, Color player) {
         if (player == Color::EMPTY) {

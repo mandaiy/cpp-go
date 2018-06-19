@@ -38,6 +38,10 @@ namespace cppgo {
     public:
         explicit State(int board_size, double komi, bool superko_rule, int history_length);
 
+        State(State const&);
+
+        State& operator=(State const&) = delete;
+
         void make_move(Move const &move, Color player = Color::EMPTY);
 
         std::unordered_set<Move> legalmoves(Color c, bool include_eyeish = false) const;
