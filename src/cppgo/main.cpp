@@ -78,6 +78,10 @@ PYBIND11_MODULE(cppgo, m) {
                                    [](cppgo::State const& state) { return state.board_size(); },
                                    "Return the current board size"
             )
+            .def_property_readonly("last_move",
+                                   [](cppgo::State const& state) { return state.last_move(); },
+                                   "Return the last move"
+            )
             .def("__str__",
                  [] (cppgo::State const& state) {
                      return state.to_string();
@@ -107,6 +111,11 @@ PYBIND11_MODULE(cppgo, m) {
                  &cppgo::State::tromp_taylor_score,
                  "Returns tromp taylor score from Color perspective",
                  "color"_a = cppgo::Color::EMPTY
+            )
+            .def("move_history",
+                 &cppgo::State::move_history,
+                 "Returns color's move history list",
+                 "color"_a
             )
             .def("make_move",
                  [] (cppgo::State& state, cppgo::Move const* m, cppgo::Color c) {

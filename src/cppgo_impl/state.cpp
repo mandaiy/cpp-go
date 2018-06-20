@@ -36,6 +36,7 @@ namespace cppgo {
             komi(komi),
             current_player(Color::BLACK),
             history_(history_length),
+            last_move_(Move::INVALID),
             state_(new cppgo::StateImpl(board_size, superko_rule))
     { }
 
@@ -43,7 +44,7 @@ namespace cppgo {
             komi(other.komi),
             current_player(other.current_player),
             history_(other.history_),
-            last_played_(other.last_played_)
+            last_move_(other.last_move_)
     {
         state_ = std::make_shared<StateImpl>(*other.state_);
     }
@@ -58,7 +59,7 @@ namespace cppgo {
         }
 
         state_->make_move(player, move);
-        last_played_ = move;
+        last_move_ = move;
 
         history_.add(*this);
 
@@ -103,6 +104,14 @@ namespace cppgo {
         return (c == Color::BLACK) ? score - komi : score + komi;
     }
 
+    Move State::last_move() const {
+        return last_move_;
+    }
+
+    std::vector<Move> State::move_history(Color c) const {
+        return state_->move_history(c);
+    }
+
     std::string State::to_string() const {
         static const std::string COLUMNS("ABCDEFGHJKLMNOPQRSTUVWXYZ");
 
@@ -137,7 +146,7 @@ namespace cppgo {
                     stone = '.';
                 }
 
-                if (m == last_played_) {
+                if (m == last_move_) {
                     os << "(" << stone << ")";
                 }
                 else {

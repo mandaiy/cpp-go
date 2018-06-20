@@ -35,6 +35,8 @@ namespace cppgo {
 
         ChainGroup const& chain_group() const;
 
+        std::vector<Move> move_history(Color c) const;
+
     private:
         const int board_size_;
         bool superko_rule_;
@@ -44,7 +46,7 @@ namespace cppgo {
         Move ko_vertex_;
         std::map<Color, Move> last_plays_;
 
-        std::map<Color, std::unordered_set<Move>> move_history_;
+        std::map<Color, std::vector<Move>> move_history_;
         std::unordered_set<ZobristHash::ValueType> hash_history_;
     };
 }

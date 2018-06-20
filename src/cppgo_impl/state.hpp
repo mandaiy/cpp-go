@@ -57,6 +57,9 @@ namespace cppgo {
 
         double tromp_taylor_score(Color c) const;
 
+        Move last_move() const;
+        std::vector<Move> move_history(Color c) const;
+
         std::string to_string() const;
 
     public:
@@ -65,7 +68,7 @@ namespace cppgo {
 
     private:
         History history_;
-        Move last_played_;
+        Move last_move_;
 
         std::shared_ptr<StateImpl> state_;
     };

@@ -1,6 +1,8 @@
 #include "state_impl.hpp"
 
+#include <algorithm>
 #include <queue>
+#include <vector>
 
 #include <boost/assert.hpp>
 
@@ -38,7 +40,7 @@ namespace cppgo {
         chain_group_.place_stone(c, v);
 
         hash_history_.emplace(chain_group_.hash());
-        move_history_[c].emplace(v);
+        move_history_[c].push_back(v);
     }
 
     std::unordered_set<Move> StateImpl::legalmoves(Color c, bool include_eye_likes) const {
@@ -59,6 +61,14 @@ namespace cppgo {
 
     ChainGroup const& StateImpl::chain_group() const {
         return chain_group_;
+    }
+
+    std::vector<Move> StateImpl::move_history(Color c) const {
+        if (move_history_.count(c) == 0) {
+            return std::vector<Move>();
+        }
+
+        return move_history_.at(c);
     }
 
     bool StateImpl::is_legal(Color c, Move const& v) const {
@@ -96,7 +106,9 @@ namespace cppgo {
     }
 
     bool StateImpl::is_positional_superko(Color c, Move const& v) const {
-        if (move_history_.at(c).count(v) == 0) {
+        auto const& move_history = move_history_.at(c);
+
+        if (std::find(std::begin(move_history), std::end(move_history), v) == std::end(move_history)) {
             return false;
         }
 
