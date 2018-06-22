@@ -82,6 +82,10 @@ PYBIND11_MODULE(cppgo, m) {
                                    [](cppgo::State const& state) { return state.last_move(); },
                                    "Return the last move"
             )
+            .def_property_readonly("history_length",
+                                   [](cppgo::State const& state) { return state.history().history_length; },
+                                   "Return history length"
+            )
             .def("__str__",
                  [] (cppgo::State const& state) {
                      return state.to_string();
