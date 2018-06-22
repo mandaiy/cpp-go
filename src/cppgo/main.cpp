@@ -148,6 +148,8 @@ PYBIND11_MODULE(cppgo, m) {
                  "Apply move to the state as color",
                  "move"_a, "c.lor"_a = cppgo::Color::EMPTY);
 
+    m.attr("Pass") = nullptr;
+
 
     py::module m_features = m.def_submodule("features");
 
