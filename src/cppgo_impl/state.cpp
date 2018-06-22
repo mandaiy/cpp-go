@@ -78,6 +78,14 @@ namespace cppgo {
         return state_->legal_moves(c, include_eyes);
     }
 
+    bool State::is_legal(Move const& move, Color player) const {
+        if (player == Color::EMPTY) {
+            player = current_player;
+        }
+
+        return state_->is_legal(player, move);
+    }
+
     std::vector<Color> const& State::stones() const {
         return state_->chain_group().stones();
     }

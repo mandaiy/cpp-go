@@ -47,6 +47,8 @@ namespace cppgo {
 
         std::unordered_set<Move> legal_moves(Color c, bool include_eyeish = false) const;
 
+        bool is_legal(Move const& move, Color player) const;
+
         std::vector<Color> const& stones() const;
 
         std::vector<int> const& black_board() const;

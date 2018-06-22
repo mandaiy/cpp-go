@@ -125,6 +125,28 @@ PYBIND11_MODULE(cppgo, m) {
                  "Generate legal moves for the current state",
                  "color"_a = cppgo::Color::EMPTY, "include_eyeish"_a = false
             )
+            .def("is_legal",
+                 [](cppgo::State const& state, cppgo::Move const* m, cppgo::Color c) {
+                     if (m == nullptr) {
+                         return true;
+                     }
+
+                     return state.is_legal(*m, c);
+                 },
+                 "move"_a, "color"_a = cppgo::Color::EMPTY
+            )
+            .def("is_legal",
+                 [](cppgo::State const& state, std::string const& m, cppgo::Color c) {
+                     return state.is_legal(cppgo::Move::from_gtp_string(m, state.board_size()), c);
+                 },
+                 "move"_a, "color"_a = cppgo::Color::EMPTY
+            )
+            .def("is_legal",
+                 [](cppgo::State const& state, std::pair<int, int> const& v, cppgo::Color c) {
+                     return state.is_legal(cppgo::Move::from_coordinate(v.first, v.second, state.board_size()), c);
+                 },
+                 "move"_a, "color"_a = cppgo::Color::EMPTY
+            )
             .def("tromp_taylor_score",
                  &cppgo::State::tromp_taylor_score,
                  "Returns tromp taylor score from Color perspective",
