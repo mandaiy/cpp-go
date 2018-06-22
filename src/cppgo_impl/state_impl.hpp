@@ -20,7 +20,7 @@ namespace cppgo {
 
         void make_move(Color c, Move const& v);
 
-        std::unordered_set<Move> legalmoves(Color c, bool include_eye_likes) const;
+        std::unordered_set<Move> legal_moves(Color c, bool include_eye_likes) const;
 
         bool is_eye_like(Color c, Move const &v) const;
         bool is_legal(Color c, Move const& v) const;

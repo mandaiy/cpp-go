@@ -66,12 +66,12 @@ namespace cppgo {
         current_player = opposite_color(current_player);
     }
 
-    std::unordered_set<Move> State::legalmoves(Color c, bool include_eyes) const {
+    std::unordered_set<Move> State::legal_moves(Color c, bool include_eyes) const {
         if (c == Color::EMPTY) {
             c = current_player;
         }
 
-        return state_->legalmoves(c, include_eyes);
+        return state_->legal_moves(c, include_eyes);
     }
 
     std::vector<Color> const& State::stones() const {

@@ -97,9 +97,9 @@ PYBIND11_MODULE(cppgo, m) {
                  },
                  py::return_value_policy::move
             )
-            .def("legalmoves",
+            .def("legal_moves",
                  [] (cppgo::State const& state, cppgo::Color c, bool include_eyeish) {
-                     auto legals = state.legalmoves(c, include_eyeish);
+                     auto legals = state.legal_moves(c, include_eyeish);
 
                      std::unordered_set<std::pair<int, int>> ret;
                      for (auto const& v : legals) {

@@ -9,7 +9,7 @@ TEST(state_impl_test, is_legal_initial_state) {
     for (int i = 1; i <= 25; ++i) {
         StateImpl s(i, false);
 
-        ASSERT_EQ(i * i, s.legalmoves(Color::BLACK, false).size());
+        ASSERT_EQ(i * i, s.legal_moves(Color::BLACK, false).size());
     }
 }
 

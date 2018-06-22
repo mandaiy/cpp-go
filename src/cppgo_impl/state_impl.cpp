@@ -43,7 +43,7 @@ namespace cppgo {
         move_history_[c].push_back(v);
     }
 
-    std::unordered_set<Move> StateImpl::legalmoves(Color c, bool include_eye_likes) const {
+    std::unordered_set<Move> StateImpl::legal_moves(Color c, bool include_eye_likes) const {
         std::unordered_set<Move> legals;
 
         for (auto const& v: chain_group_.empties()) {
