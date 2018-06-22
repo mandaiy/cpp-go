@@ -40,6 +40,10 @@ namespace cppgo {
             state_(new cppgo::StateImpl(board_size, superko_rule))
     { }
 
+    State::State(int board_size, double komi, bool superko_rule, bool retain_history) :
+            State(board_size, komi, superko_rule, (retain_history) ? 10 : 0)
+    { }
+
     State::State(State const& other) :
             komi(other.komi),
             current_player(other.current_player),

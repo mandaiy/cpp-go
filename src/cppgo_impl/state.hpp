@@ -36,6 +36,7 @@ namespace cppgo {
 
     class State {
     public:
+        explicit State(int board_size, double komi, bool superko_rule, bool retain_history);
         explicit State(int board_size, double komi, bool superko_rule, int history_length);
 
         State(State const&);

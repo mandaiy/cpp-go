@@ -66,6 +66,9 @@ PYBIND11_MODULE(cppgo, m) {
             .def_property_readonly_static("PASS",    [](py::object) { return cppgo::Move::PASS; });
 
     py::class_<cppgo::State>(m, "State")
+            .def(py::init<std::size_t, double, bool, bool>(),
+                 "size"_a, "komi"_a = 7.5, "superko_rule"_a = false, "retain_history"_a = false
+            )
             .def(py::init<std::size_t, double, bool, int>(),
                  "size"_a, "komi"_a = 7.5, "superko_rule"_a = false, "history_length"_a = 0
             )
@@ -85,6 +88,9 @@ PYBIND11_MODULE(cppgo, m) {
             .def_property_readonly("history_length",
                                    [](cppgo::State const& state) { return state.history().history_length; },
                                    "Return history length"
+            )
+            .def_property_readonly("retain_history",
+                                   [](cppgo::State const& state) { return state.history().history_length > 0; }
             )
             .def("__str__",
                  [] (cppgo::State const& state) {
