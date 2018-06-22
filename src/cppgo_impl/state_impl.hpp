@@ -30,6 +30,7 @@ namespace cppgo {
         double tromp_taylor_score(Color c) const;
 
         int board_size() const;
+        bool superko_rule() const;
 
         ZobristHash::ValueType hash() const;
 

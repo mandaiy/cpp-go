@@ -55,6 +55,7 @@ namespace cppgo {
         History const& history() const;
 
         int board_size() const;
+        bool superko_rule() const;
 
         double tromp_taylor_score(Color c) const;
 

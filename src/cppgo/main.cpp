@@ -77,6 +77,11 @@ PYBIND11_MODULE(cppgo, m) {
                           [](cppgo::State& state, cppgo::Color c) { state.current_player = c; },
                           "Opposite of the last played color"
             )
+            .def_property("komi",
+                          [](cppgo::State const& state) { return state.komi; },
+                          [](cppgo::State& state, double komi) { state.komi = komi; },
+                          "Komi value"
+            )
             .def_property_readonly("board_size",
                                    [](cppgo::State const& state) { return state.board_size(); },
                                    "Return the current board size"
@@ -91,6 +96,9 @@ PYBIND11_MODULE(cppgo, m) {
             )
             .def_property_readonly("retain_history",
                                    [](cppgo::State const& state) { return state.history().history_length > 0; }
+            )
+            .def_property_readonly("superko_rule",
+                                   [](cppgo::State const& state) { return state.superko_rule(); }
             )
             .def("__str__",
                  [] (cppgo::State const& state) {

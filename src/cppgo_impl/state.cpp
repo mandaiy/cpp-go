@@ -98,6 +98,10 @@ namespace cppgo {
         return state_->board_size();
     }
 
+    bool State::superko_rule() const {
+        return state_->superko_rule();
+    }
+
     double State::tromp_taylor_score(Color c) const {
         if (c == Color::EMPTY) {
             c = current_player;

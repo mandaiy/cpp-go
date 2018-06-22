@@ -123,6 +123,10 @@ namespace cppgo {
         return board_size_;
     }
 
+    bool StateImpl::superko_rule() const {
+        return superko_rule_;
+    }
+
     double StateImpl::tromp_taylor_score(Color color) const {
         std::map<Color, int> score = {
                 {Color::WHITE, 0},
