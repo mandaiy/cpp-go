@@ -144,7 +144,7 @@ namespace cppgo {
         auto stones = this->stones();
 
         for (int row = board_size() - 1; row >= 0; --row) {
-            if (board_size() >= 10 and board_size() - row < 10) { os << " "; }
+            if (board_size() >= 10 and (row + 1) < 10) { os << " "; }
             os << (row + 1);
 
             for (int col = 0; col < board_size(); ++col) {
@@ -171,7 +171,6 @@ namespace cppgo {
 
             }
 
-            if (board_size() >= 10 and board_size() - row < 10) { os << " "; }
             os << (row + 1);
             os << std::endl;
         }
