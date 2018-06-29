@@ -1,196 +1,68 @@
+#include <stdexcept>
+
 #include <boost/format.hpp>
 
-#include "features.hpp"
+#include "cppgo/features.hpp"
 
 #include "cppgo_impl/state.hpp"
+#include "cppgo_impl/features.hpp"
 
 
 namespace py = pybind11;
 
 namespace cppgo {
 
-    void check_length(State const &state, std::size_t i) {
-        if (0 <= i and i < state.history().history_length) {
-            return;
-        }
-
-        auto message = (boost::format("argument i must be in the range of [0, %1%), which was %2%")
-                            % state.history().history_length
-                            % i).str();
-        throw std::invalid_argument(message);
+    template <typename T, typename TInt>
+    py::array_t<T> make_pyarray(T* array_ptr, std::initializer_list<TInt> shape) {
+        return py::array_t<float>(shape, array_ptr, py::capsule(array_ptr, [](void* f) {
+            delete[] reinterpret_cast<T*>(f);
+        }));
     }
 
-    py::array_t<float> color_impl(State const& state, Color c) {
-        auto board_size = static_cast<std::size_t>(state.board_size());
-        auto array_size = board_size * board_size;
+    template <typename T>
+    T* to_ptr(std::vector<T> const& v) {
+        auto ptr = new T[v.size()]();
 
-        auto ret = new float[array_size]();
+        std::copy(std::begin(v), std::end(v), ptr);
 
-        if (state.current_player == c) {
-            std::fill_n(ret, array_size, 1.0f);
-        }
-
-        return py::array_t<float>({1, state.board_size(), state.board_size()}, ret, py::capsule(ret, [] (void* f) {
-            auto p = reinterpret_cast<float*>(f);
-            delete[] p;
-        }));
+        return ptr;
     }
 
     py::array_t<float> black(State const& state) {
-        return color_impl(state, Color::BLACK);
+        return make_pyarray(to_ptr(color_impl<float>(state, Color::BLACK)),
+                            {1, state.board_size(), state.board_size()});
     }
 
     py::array_t<float> white(State const& state) {
-        return color_impl(state, Color::WHITE);
+        return make_pyarray(to_ptr(color_impl<float>(state, Color::WHITE)),
+                            {1, state.board_size(), state.board_size()});
     }
 
 
-    py::array_t<float> board_i_color_impl(State const& state, std::size_t i, Color c) {
-        BOOST_ASSERT(c != Color::EMPTY);
+    py::array_t<float> board_i(State const& state, int i, Color c) {
+        auto const length = state.history().history_length;
 
-        auto const& history = state.history().history(c);
-
-        auto board_size = static_cast<std::size_t>(state.board_size());
-        auto plane_size = board_size * board_size;
-        auto array_size = plane_size;
-
-        auto ret = new float[array_size]();
-
-        auto hook = py::capsule(ret, [] (void* f) {
-            auto p = reinterpret_cast<float*>(f);
-            delete[] p;
-        });
-
-        if (history.size() <= i) {
-            return py::array_t<float>({1, state.board_size(), state.board_size()}, ret, hook);
+        if (i < 0 or state.history().history_length <= i) {
+            throw std::invalid_argument((boost::format("i must be in [0, %1%), which was %2%") % length % i).str());
         }
 
-        auto itr = std::begin(history);
+        float* ptr = (c == Color::EMPTY) ? to_ptr(board_i_impl<float>(state, i))
+                                         : to_ptr(board_i_color_impl<float>(state, i, c));
 
-        std::advance(itr, i);
-        std::copy(std::begin(*itr), std::end(*itr), ret);
-
-        return py::array_t<float>({1, state.board_size(), state.board_size()}, ret, hook);
+        return make_pyarray(ptr, {2, state.board_size(), state.board_size()});
     }
 
-    py::array_t<float> board_i_impl(State const& state, std::size_t i) {
-        auto board_size = static_cast<std::size_t>(state.board_size());
-        auto plane_size = board_size * board_size;
-        auto array_size = plane_size * 2;
+    py::array_t<float> history_n(State const& state, int n, Color c) {
+        auto const length = state.history().history_length;
 
-        auto ret = new float[array_size]();
-
-        auto const& history_1 = state.history().history(state.current_player);
-        auto const& history_2 = state.history().history(opposite_color(state.current_player));
-
-        auto hook = py::capsule(ret, [] (void* f) {
-            auto p = reinterpret_cast<float*>(f);
-            delete[] p;
-        });
-
-        if (history_1.size() <= i or history_2.size() <= i) {
-            return py::array_t<float>({2, state.board_size(), state.board_size()}, ret, hook);
+        if (n < 0 or length <= n) {
+            throw std::invalid_argument((boost::format("n must be in [0, %1%), which was %2%") % length % n).str());
         }
 
-        auto itr_1 = std::begin(history_1);
-        auto itr_2 = std::begin(history_2);
+        float* ptr = (c == Color::EMPTY) ? to_ptr(history_n_impl<float>(state, n))
+                                         : to_ptr(history_n_color_impl<float>(state, n, c));
 
-        std::advance(itr_1, i);
-        std::advance(itr_2, i);
-
-        auto const& board_1 = *itr_1;
-        auto const& board_2 = *itr_2;
-
-        std::copy(std::begin(board_1), std::end(board_1), ret);
-        std::copy(std::begin(board_2), std::end(board_2), ret + plane_size);
-
-        return py::array_t<float>({2, state.board_size(), state.board_size()}, ret, hook);
-    }
-
-    py::array_t<float> board_i(State const& state, std::size_t i, Color c) {
-        check_length(state, i);
-
-        if (c == Color::EMPTY) {
-            return board_i_impl(state, i);
-        }
-
-        return board_i_color_impl(state, i, c);
-    }
-
-    py::array_t<float> history_n_color_impl(State const& state, std::size_t n, Color c) {
-        auto board_size = static_cast<std::size_t>(state.board_size());
-        auto plane_size = board_size * board_size;
-        auto array_size = plane_size * n;
-
-        auto ret = new float[array_size]();
-
-        auto const& history = state.history().history(c);
-        auto itr = std::begin(history);
-
-        int i = 0;
-        auto length = history.size();
-
-        std::size_t offset = 0;
-
-        while (i < n and i < length) {
-            auto const &board = *itr;
-            std::copy(std::begin(board), std::end(board), ret + offset);
-
-            ++itr;
-            offset += plane_size;
-            i += 1;
-        }
-
-        return py::array_t<float>({n, board_size, board_size}, ret, py::capsule(ret, [] (void* f) {
-            auto p = reinterpret_cast<float*>(f);
-            delete[] p;
-        }));
-    }
-
-    py::array_t<float> history_n_impl(State const& state, std::size_t n) {
-        auto board_size = static_cast<std::size_t>(state.board_size());
-        auto plane_size = board_size * board_size;
-        auto array_size = plane_size * 2 * n;
-
-        auto ret = new float[array_size]();
-
-        auto const& history_1 = state.history().history(state.current_player);
-        auto const& history_2 = state.history().history(opposite_color(state.current_player));
-
-        auto itr_1 = std::begin(history_1);
-        auto itr_2 = std::begin(history_2);
-
-        int i = 0;
-        auto length = history_1.size();
-
-        std::size_t offset = 0;
-
-        while (i < n and i < length) {
-            auto const& board_1 = *itr_1;
-            auto const& board_2 = *itr_2;
-
-            std::copy(std::begin(board_1), std::end(board_1), ret + offset);
-            std::copy(std::begin(board_2), std::end(board_2), ret + offset + plane_size);
-
-            ++itr_1; ++itr_2;
-            offset += 2 * plane_size;
-            i += 1;
-        }
-
-        return py::array_t<float>({2 * n, board_size, board_size}, ret, py::capsule(ret, [] (void* f) {
-            auto p = reinterpret_cast<float*>(f);
-            delete[] p;
-        }));
-    }
-
-    py::array_t<float> history_n(State const& state, std::size_t n, Color c) {
-        check_length(state, n - 1);
-
-        if (c == Color::EMPTY) {
-            return history_n_impl(state, n);
-        }
-
-        return history_n_color_impl(state, n, c);
+        return make_pyarray(ptr, {2 * (n + 1), state.board_size(), state.board_size()});
     }
 
 }

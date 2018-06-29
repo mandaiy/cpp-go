@@ -190,14 +190,14 @@ PYBIND11_MODULE(cppgo, m) {
     py::module m_features = m.def_submodule("features");
 
     m_features.def("board_i",
-                   [] (cppgo::State const& state, std::size_t i, cppgo::Color c) {
+                   [] (cppgo::State const& state, int i, cppgo::Color c) {
                        return cppgo::board_i(state, i, c);
                    },
                    "Get the i-th before board feature. If c = Color.EMPTY, returns both color's features",
                    "state"_a, "i"_a, "color"_a = cppgo::Color::EMPTY
     );
     m_features.def("history_n",
-                   [] (cppgo::State const& state, std::size_t n, cppgo::Color c) {
+                   [] (cppgo::State const& state, int n, cppgo::Color c) {
                        return cppgo::history_n(state, n, c);
                    },
                    "Get the board history from n-th before. If c = Color.EMPTY, returns both color's features",

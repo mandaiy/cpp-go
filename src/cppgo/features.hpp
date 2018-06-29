@@ -14,9 +14,9 @@ namespace cppgo {
 
     class State;
 
-    pybind11::array_t<float> board_i(State const& state, std::size_t i, Color c);
+    pybind11::array_t<float> board_i(State const& state, int i, Color c);
 
-    pybind11::array_t<float> history_n(State const& state, std::size_t n, Color c);
+    pybind11::array_t<float> history_n(State const& state, int n, Color c);
 
     pybind11::array_t<float> black(State const& state);
 
