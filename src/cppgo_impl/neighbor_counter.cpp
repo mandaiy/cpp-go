@@ -1,18 +1,18 @@
+#include <stdexcept>
+
 #include "neighbor_counter.hpp"
 
 namespace cppgo {
 
-    static constexpr int max_adjacents = 4;
+    constexpr int black_shift = 0;
+    constexpr int white_shift = 4;
+    constexpr int empty_shift = 8;
 
-    static constexpr int black_shift = 0;
-    static constexpr int white_shift = 4;
-    static constexpr int empty_shift = 8;
+    constexpr unsigned int black_increment = 0xFF'FF'FF'01;
+    constexpr unsigned int white_increment = 0xFF'FF'FF'10;
+    constexpr unsigned int empty_increment = 0xFF'FF'FF'11;
 
-    static constexpr unsigned int black_increment = 0xFF'FF'FF'01;
-    static constexpr unsigned int white_increment = 0xFF'FF'FF'10;
-    static constexpr unsigned int empty_increment = 0xFF'FF'FF'11;
-
-    static constexpr unsigned int initial_bits = 0b0100u << empty_shift;
+    constexpr unsigned int initial_bits = 0b0100u << empty_shift;
 
     NeighborCounter::NeighborCounter() : bits_(initial_bits) { }
 
@@ -86,6 +86,8 @@ namespace cppgo {
         if (c == Color::WHITE) {
             return static_cast<int>( (bits_ >> white_shift) & mask );
         }
+
+        throw std::invalid_argument("");
     }
 
 

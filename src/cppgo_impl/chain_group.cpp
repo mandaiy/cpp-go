@@ -1,8 +1,8 @@
+#include <cassert>
 #include <numeric>
 #include <set>
 #include <sstream>
 
-#include <boost/assert.hpp>
 #include <boost/format.hpp>
 
 #include "chain_group.hpp"
@@ -77,10 +77,6 @@ namespace cppgo {
                 remove_chain(nbr);
             }
         });
-
-        for (auto const& p : chains_) {
-            BOOST_ASSERT(p.second.liberty_count() > 0);
-        }
     }
 
     Chain const& ChainGroup::chain_at(Move const& v) const {
@@ -90,7 +86,7 @@ namespace cppgo {
 
     Color ChainGroup::stone_at(Move const& v) const {
         // NAND( black, white ) should be true
-        BOOST_ASSERT(black_stones_[v()] * white_stones_[v()] == 0);
+        assert(black_stones_[v()] * white_stones_[v()] == 0);
 
         if (black_stones_[v()] != 0) {
             return Color::BLACK;
@@ -152,7 +148,7 @@ namespace cppgo {
     }
 
     Chain& ChainGroup::chain_at_(Move const& v, bool with_check) {
-        BOOST_ASSERT(not with_check or chains_.count(chain_ids_[v()]) != 0);
+        assert(not with_check or chains_.count(chain_ids_[v()]) != 0);
 
         return chains_[chain_ids_[v()]];
     }
@@ -182,10 +178,6 @@ namespace cppgo {
             chains_.erase(chain_ids_[v()]);
 
             chain_ids_[v()] = chain_ids_[v_base()];
-        }
-
-        for (auto const& v : base_chain.members()) {
-            BOOST_ASSERT(chain_ids_[v()] == chain_ids_[v_base()]);
         }
     }
 
