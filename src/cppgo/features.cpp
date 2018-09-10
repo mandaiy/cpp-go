@@ -48,10 +48,14 @@ namespace cppgo {
             throw std::invalid_argument(os.str());
         }
 
-        float* ptr = (c == Color::EMPTY) ? to_ptr(board_i_impl<float>(state, i))
-                                         : to_ptr(board_i_color_impl<float>(state, i, c));
-
-        return make_pyarray(ptr, {2, state.board_size(), state.board_size()});
+        if (c == Color::EMPTY) {
+            return make_pyarray(to_ptr(board_i_impl<float>(state, i)),
+                                {2, state.board_size(), state.board_size()});
+        }
+        else {
+            return make_pyarray(to_ptr(board_i_color_impl<float>(state, i, c)),
+                                {1, state.board_size(), state.board_size()});
+        }
     }
 
     py::array_t<float> history_n(State const& state, int n, Color c) {
@@ -64,10 +68,14 @@ namespace cppgo {
             throw std::invalid_argument(os.str());
         }
 
-        float* ptr = (c == Color::EMPTY) ? to_ptr(history_n_impl<float>(state, n))
-                                         : to_ptr(history_n_color_impl<float>(state, n, c));
-
-        return make_pyarray(ptr, {2 * (n + 1), state.board_size(), state.board_size()});
+        if (c == Color::EMPTY) {
+            return make_pyarray(to_ptr(history_n_impl<float>(state, n)),
+                                {2 * (n + 1), state.board_size(), state.board_size()});
+        }
+        else {
+            return make_pyarray(to_ptr(history_n_color_impl<float>(state, n, c)),
+                                {n + 1, state.board_size(), state.board_size()});
+        }
     }
 
 }
