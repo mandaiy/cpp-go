@@ -160,6 +160,18 @@ PYBIND11_MODULE(cppgo, m) {
                  "color"_a
             )
             .def("make_move",
+                 [] (cppgo::State& state, int index, cppgo::Color c) {
+                     if (index == -1) {
+                         state.make_move(cppgo::Move::PASS, c);
+                     }
+                     else {
+                         state.make_move(cppgo::Move::from_raw(index, state.board_size()), c);
+                     }
+                 },
+                 "Apply move to the state as color",
+                 "index"_a, "color"_a = cppgo::Color::EMPTY
+            )
+            .def("make_move",
                  [] (cppgo::State& state, cppgo::Move const* m, cppgo::Color c) {
                      if (m == nullptr) {
                          state.make_move(cppgo::Move::PASS, c);
