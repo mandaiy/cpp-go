@@ -58,7 +58,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='cppgo',
-    version='0.5.2',
+    version='0.6.0',
     author='Yusaku Mandai',
     author_email='mandai@graco.c.u-tokyo.ac.jp',
     description='Go library implemented in C++',
