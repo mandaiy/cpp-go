@@ -1,6 +1,5 @@
+#include <ostream>
 #include <stdexcept>
-
-#include <boost/format.hpp>
 
 #include "cppgo/features.hpp"
 
@@ -43,7 +42,10 @@ namespace cppgo {
         auto const length = state.history().history_length;
 
         if (i < 0 or state.history().history_length <= i) {
-            throw std::invalid_argument((boost::format("i must be in [0, %1%), which was %2%") % length % i).str());
+            std::ostringstream os;
+            os << "Given index (" << i << ") is out of bound. Expected in [0, " << length << ")";
+
+            throw std::invalid_argument(os.str());
         }
 
         float* ptr = (c == Color::EMPTY) ? to_ptr(board_i_impl<float>(state, i))
@@ -56,7 +58,10 @@ namespace cppgo {
         auto const length = state.history().history_length;
 
         if (n < 0 or length <= n) {
-            throw std::invalid_argument((boost::format("n must be in [0, %1%), which was %2%") % length % n).str());
+            std::ostringstream os;
+            os << "Given index (" << n << ") is out of bound. Expected in [0, " << length << ")";
+
+            throw std::invalid_argument(os.str());
         }
 
         float* ptr = (c == Color::EMPTY) ? to_ptr(history_n_impl<float>(state, n))

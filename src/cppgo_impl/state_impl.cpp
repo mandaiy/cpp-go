@@ -4,8 +4,6 @@
 #include <queue>
 #include <vector>
 
-#include <boost/assert.hpp>
-
 
 namespace cppgo {
 

@@ -3,8 +3,6 @@
 #include <set>
 #include <sstream>
 
-#include <boost/format.hpp>
-
 #include "chain_group.hpp"
 
 
