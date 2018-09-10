@@ -2,9 +2,6 @@
 #include <string>
 #include <sstream>
 
-#include <boost/assert.hpp>
-#include <boost/format.hpp>
-
 #include "move.hpp"
 
 
@@ -28,11 +25,11 @@ namespace cppgo {
         }
 
         if (not (0 <= row and row < board_size)) {
-            throw std::invalid_argument((boost::format("invalid row %1% in board size %2%") % row % board_size).str());
+            throw std::invalid_argument(std::string("Given row is out of bound: ") + std::to_string(row));
         }
 
         if (not (0 <= col and col < board_size)) {
-            throw std::invalid_argument((boost::format("invalid col %1% in board size %2%") % col % board_size).str());
+            throw std::invalid_argument(std::string("Given column is out of bound: ") + std::to_string(col));
         }
 
         return Move(row * board_size + col, board_size);
@@ -60,11 +57,11 @@ namespace cppgo {
 
     Move Move::from_raw(int raw, int board_size) {
         if (board_size <= 0) {
-            throw std::invalid_argument("board_size should be greater than 0");
+            throw std::invalid_argument(std::string("Board size should be greater than 0: ") + std::to_string(board_size));
         }
 
         if (not (0 <= raw and raw < board_size * board_size)) {
-            throw std::invalid_argument("invalid raw");
+            throw std::invalid_argument(std::string("Given index is out of bound: ") + std::to_string(raw));
         }
 
         return Move(raw, board_size);

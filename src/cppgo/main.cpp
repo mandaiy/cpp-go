@@ -9,6 +9,7 @@
 #include "cppgo_impl/state.hpp"
 
 #include "features.hpp"
+#include "miscs.hpp"
 
 namespace py = pybind11;
 
@@ -206,5 +207,9 @@ PYBIND11_MODULE(cppgo, m) {
 
     m_features.def("black",   &cppgo::black);
     m_features.def("white",   &cppgo::white);
+
+    py::module m_miscs = m.def_submodule("miscs");
+
+    m_miscs.def("apply_moves", &cppgo::apply_moves);
 }
 
