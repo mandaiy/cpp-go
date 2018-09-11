@@ -13,7 +13,7 @@ namespace cppgo {
 
     template <typename T, typename TInt>
     py::array_t<T> make_pyarray(T* array_ptr, std::initializer_list<TInt> shape) {
-        return py::array_t<float>(shape, array_ptr, py::capsule(array_ptr, [](void* f) {
+        return py::array_t<T>(shape, array_ptr, py::capsule(array_ptr, [](void* f) {
             delete[] reinterpret_cast<T*>(f);
         }));
     }

@@ -33,8 +33,6 @@ PYBIND11_MODULE(cppgo, m) {
             .value("EMPTY", cppgo::Color::EMPTY)
             .export_values();
 
-    m.def("opposite_color", &cppgo::opposite_color);
-
     py::class_<cppgo::Move>(m, "Move")
             .def_static("from_coordinate",
                  &cppgo::Move::from_coordinate,
@@ -200,6 +198,17 @@ PYBIND11_MODULE(cppgo, m) {
 
     m.attr("Pass") = nullptr;
 
+    m.def("apply_moves",
+          &cppgo::apply_moves,
+          "Apply given moves to the given state. The moves should be an ndarray of ints",
+          "state"_a, "moves"_a
+    );
+
+    m.def("opposite_color",
+          &cppgo::opposite_color,
+          "Return the opposite color of a given color",
+          "color"_a
+    );
 
     py::module m_features = m.def_submodule("features");
 
@@ -218,11 +227,7 @@ PYBIND11_MODULE(cppgo, m) {
                    "state"_a, "i"_a, "color"_a = cppgo::Color::EMPTY
     );
 
-    m_features.def("black",   &cppgo::black);
-    m_features.def("white",   &cppgo::white);
-
-    py::module m_miscs = m.def_submodule("miscs");
-
-    m_miscs.def("apply_moves", &cppgo::apply_moves);
+    m_features.def("color_black", &cppgo::black);
+    m_features.def("color_white", &cppgo::white);
 }
 
