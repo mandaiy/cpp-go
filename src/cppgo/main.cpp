@@ -123,7 +123,24 @@ PYBIND11_MODULE(cppgo, m) {
                      return ret;
                  },
                  "Generate legal moves for the current state",
-                 "color"_a = cppgo::Color::EMPTY, "include_eyeish"_a = false
+                 "color"_a = cppgo::Color::EMPTY, "include_eyeish"_a = true
+            )
+            .def("legal_indices",
+                 [] (cppgo::State const& state, cppgo::Color c, bool include_eyeish) {
+                     auto legals = state.legal_moves(c, include_eyeish);
+
+                     std::vector<int> ret(legals.size());
+
+                     int i = 0;
+                     for (auto const& v : legals) {
+                         ret[i] = v.raw();
+                         ++ i;
+                     }
+
+                     return ret;
+                 },
+                 "Generate legal indices for the current state",
+                 "color"_a = cppgo::Color::EMPTY, "include_eyeish"_a = true
             )
             .def("is_legal",
                  [](cppgo::State const& state, cppgo::Move const* m, cppgo::Color c) {
