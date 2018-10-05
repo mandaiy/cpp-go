@@ -193,7 +193,6 @@ PYBIND11_MODULE(cppgo, m) {
                      }
                      else {
                          state.make_move(*m, c);
-
                      }
                  },
                  "Apply move to the state as color",
@@ -211,7 +210,12 @@ PYBIND11_MODULE(cppgo, m) {
                     state.make_move(cppgo::Move::from_coordinate(v.first, v.second, state.board_size()), c);
                  },
                  "Apply move to the state as color",
-                 "move"_a, "color"_a = cppgo::Color::EMPTY);
+                 "move"_a, "color"_a = cppgo::Color::EMPTY)
+            .def("zobrist_hash",
+                 &cppgo::State::hash,
+                 "Return a zobrist hash value"
+            );
+
 
     m.attr("Pass") = nullptr;
 

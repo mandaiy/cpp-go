@@ -9,6 +9,7 @@
 
 #include "color.hpp"
 #include "move.hpp"
+#include "zobrist_hash.hpp"
 
 
 namespace cppgo {
@@ -65,6 +66,8 @@ namespace cppgo {
         std::vector<Move> move_history(Color c) const;
 
         std::string to_string() const;
+
+        ZobristHash::ValueType hash() const;
 
     public:
         double komi;

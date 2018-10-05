@@ -186,4 +186,8 @@ namespace cppgo {
         return os.str();
     }
 
+    ZobristHash::ValueType State::hash() const {
+        return state_->hash();
+    }
+
 }
